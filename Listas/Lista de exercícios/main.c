@@ -11,6 +11,12 @@ typedef struct{
 } LS;
 
 typedef struct{
+    NO *no;
+    int r;
+    int a;
+} LSRA;
+
+typedef struct{
     LS *l1;
     LS *l2;
 } LSIP;
@@ -26,6 +32,9 @@ int qntMatchSmall(LS *lista, int item);
 void *splitIPList(LS *lista);
 void *splitBSList(LS *lista, int x);
 int replaceXY(LS *lista, int x, int y);
+void removeX(LS *lista, int x);
+void removeRA(LSRA *lista, int x);
+void insereListaRA(LSRA *lista, int conteudo);
 
 int main() {
     LS *lista = malloc(sizeof(LS));
@@ -39,7 +48,7 @@ int main() {
     insereLista(lista, 5);
     insereLista(lista, 3);
 
-    printf("Lista: ");
+    printf("Lista: \n");
     imprimeLista(lista);
     printf("\n\n");
 
@@ -74,9 +83,9 @@ int main() {
     LSIP *ip = splitIPList(lista);
 
     printf("======Exercício 6======");
-    printf("\nImpares: ");
+    printf("\nImpares: \n");
     imprimeLista(ip->l1);
-    printf("\nPares: ");
+    printf("\nPares: \n");
     imprimeLista(ip->l2);
     printf("\n\n");
     free(ip);
@@ -85,9 +94,9 @@ int main() {
     ip = splitBSList(lista, 3);
 
     printf("======Exercício 7======");
-    printf("\nMaiores que %d: ", 3);
+    printf("\nMaiores que %d: \n", 3);
     imprimeLista(ip->l1);
-    printf("\nMenores que %d: ", 3);
+    printf("\nMenores que %d: \n", 3);
     imprimeLista(ip->l2);
     printf("\n\n");
     free(ip);
@@ -95,8 +104,36 @@ int main() {
     //Exercício 8
     printf("======Exercício 8======");
     printf("\nVezes em que o 3 foi trocado por 7: %d", replaceXY(lista, 3, 7));
-    printf("\nNova lista: ");
+    printf("\nNova lista: \n");
     imprimeLista(lista);
+    printf("\n\n");
+
+    //Exercício 9
+    removeX(lista, 7);
+    printf("======Exercício 9======");
+    printf("\nNova lista: \n");
+    imprimeLista(lista);
+    printf("\n\n");
+
+    //Exercício 10
+    LSRA *listara = malloc(sizeof(LSRA));
+    listara->r = 0;
+    listara->a = 0;
+    listara->no = NULL;
+    insereListaRA(listara, 2);
+    insereListaRA(listara, 3);
+    insereListaRA(listara, 3);
+    insereListaRA(listara, 6);
+    insereListaRA(listara, 150);
+    insereListaRA(listara, 10);
+    insereListaRA(listara, 8);
+    insereListaRA(listara, 11);
+    printf("======Exercício 10======");
+    printf("\nLista inicial (A: %d | R: %d): \n", listara->a, listara->r);
+    imprimeLista(listara);
+    removeRA(listara, 3);
+    printf("\nLista final (A: %d | R: %d): \n", listara->a, listara->r);
+    imprimeLista(listara);
     printf("\n\n");
 
     return 0;
@@ -120,6 +157,29 @@ void insereLista(LS *lista, int conteudo){
         p = p->prox;
         p->conteudo = conteudo;
         p->prox = NULL;
+    }
+}
+
+void insereListaRA(LSRA *lista, int conteudo){
+    if(lista == NULL)
+        return;
+    if(lista->no == NULL)
+    {
+        lista->no = malloc(sizeof(NO));
+        lista->no->conteudo = conteudo;
+        lista->no->prox = NULL;
+        lista->a = 1;
+    }
+    else
+    {
+        NO *p = lista->no;
+        while(p->prox != NULL)
+            p = p->prox;
+        p->prox = malloc(sizeof(NO));
+        p = p->prox;
+        p->conteudo = conteudo;
+        p->prox = NULL;
+        lista->a++;
     }
 }
 
@@ -322,6 +382,54 @@ int replaceXY(LS *lista, int x, int y){
 }
 
 void removeX(LS *lista, int x){
+    if(lista == NULL)
+        return;
+
+    NO *p = lista->no;
+    NO *aux = NULL;
+
+    if(p->conteudo == x){
+        lista->no = p->prox;
+        free(p);
+        aux = lista->no;
+    }
+
+    while(aux->prox != NULL){
+        p = aux;
+        aux = aux->prox;
+        if(aux->conteudo == x) {
+            p->prox = aux->prox;
+            free(aux);
+            aux = p;
+        }
+    }
+}
+
+void removeRA(LSRA *lista, int x){
+    if(lista == NULL)
+        return;
+
+    NO *p = lista->no;
+    NO *a = NULL;
+
+    if(p->conteudo == x) {
+        lista->no = p->prox;
+        free(p);
+        p = lista->no;
+        lista->r++;
+    }
+
+    while (p->prox != NULL){
+        a = p;
+        p = p->prox;
+        if(p->conteudo == x){
+            a->prox = p->prox;
+            free(p);
+            p = a;
+            lista->r++;
+        }
+    }
+
 
 }
 
