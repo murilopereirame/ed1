@@ -35,6 +35,8 @@ int replaceXY(LS *lista, int x, int y);
 void removeX(LS *lista, int x);
 void removeRA(LSRA *lista, int x);
 void insereListaRA(LSRA *lista, int conteudo);
+int returnPNO(LS *lista);
+int returnUNO(LS *lista);
 
 int main() {
     LS *lista = malloc(sizeof(LS));
@@ -117,9 +119,11 @@ int main() {
 
     //Exercício 10
     LSRA *listara = malloc(sizeof(LSRA));
+
     listara->r = 0;
     listara->a = 0;
     listara->no = NULL;
+
     insereListaRA(listara, 2);
     insereListaRA(listara, 3);
     insereListaRA(listara, 3);
@@ -128,12 +132,23 @@ int main() {
     insereListaRA(listara, 10);
     insereListaRA(listara, 8);
     insereListaRA(listara, 11);
+
     printf("======Exercício 10======");
     printf("\nLista inicial (A: %d | R: %d): \n", listara->a, listara->r);
     imprimeLista(listara);
     removeRA(listara, 3);
     printf("\nLista final (A: %d | R: %d): \n", listara->a, listara->r);
     imprimeLista(listara);
+    printf("\n\n");
+
+    //Exercício 11
+    printf("======Exercício 11======");
+    printf("\nConteúdo primeiro nó: %d", returnPNO(lista));
+    printf("\n\n");
+
+    //Exercício 12
+    printf("======Exercício 12======");
+    printf("\nConteúdo último nó: %d", returnUNO(lista));
     printf("\n\n");
 
     return 0;
@@ -429,8 +444,36 @@ void removeRA(LSRA *lista, int x){
             lista->r++;
         }
     }
+}
 
+int returnPNO(LS *lista){
+    if(lista != NULL) {
+        if (lista->no != NULL)
+            return lista->no->conteudo;
+        else
+            printf("\nLista vazia.");
+    }
+    else
+        printf("\nLista nula.");
+}
 
+int returnUNO(LS *lista){
+    if(lista == NULL) {
+        printf("Lista nula.");
+        return NULL;
+    }
+
+    if(lista->no == NULL){
+        printf("Lista vazia.");
+        return NULL;
+    }
+
+    NO *p = lista->no;
+
+    while(p->prox != NULL)
+        p = p->prox;
+
+    return p->conteudo;
 }
 
 
