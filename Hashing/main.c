@@ -61,10 +61,17 @@ void main(){
     insertHCO(listahover, "UPA!", hash("UPA!", MAX));
     insertHCO(listahover, "IPA!", hash("IPA!", MAX));
     insertHCO(listahover, "RPA!", hash("RPA!", MAX));
+
+    //Overflow a partir daqui
     insertHCO(listahover, "QPA!", hash("QPA!", MAX));
     insertHCO(listahover, "GPA!", hash("GPA!", MAX));
-    insertHCO(listahover, "VSF RONALDO!!", hash("VSF RONALDO!!", MAX));
+
+    insertHCO(listahover, "TOP!!", hash("TOP!!", MAX));
     printHashingWOver(listahover);
+
+    //Hashing externo com overflow
+
+
 }
 
 /*========================
