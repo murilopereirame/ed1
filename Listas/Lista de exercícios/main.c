@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 typedef struct {
     int conteudo;
@@ -37,6 +38,10 @@ void removeRA(LSRA *lista, int x);
 void insereListaRA(LSRA *lista, int conteudo);
 int returnPNO(LS *lista);
 int returnUNO(LS *lista);
+void *returnLast(LS *lista);
+void insertN(LS *lista, int pos, int conteudo);
+void insertN1(LS *lista, int pos, int conteudo);
+void removeN(LS *lista, int pos);
 
 int main() {
     LS *lista = malloc(sizeof(LS));
@@ -151,6 +156,37 @@ int main() {
     printf("\nConteúdo último nó: %d", returnUNO(lista));
     printf("\n\n");
 
+    //Exercício 13
+    NO *rtl = returnLast(lista);
+    printf("======Exercício 13======");
+    printf("\nConteúdo último nó: %d", rtl->conteudo);
+    printf("\n\n");
+
+    //Exercício 14
+    insertN(lista,1, 250);
+    insertN(lista,2, 260);
+    printf("======Exercício 14======");
+    printf("\nNova lista: ");
+    imprimeLista(lista);
+    printf("\n\n");
+
+    //Exercício 15
+    insertN1(lista, 3, 50);
+    printf("======Exercício 15======");
+    printf("\nNova lista: ");
+    imprimeLista(lista);
+    printf("\n\n");
+
+    //Exercicio 16
+    printf("======Exercício 16======");
+    printf("\nDeus vai implementar esse pra gente na hora da prova.\n\n");
+    /*
+    removeN(lista, 10);
+    printf("\nNova lista: ");
+    imprimeLista(lista);
+    printf("\n\n");*/
+
+
     return 0;
 }
 
@@ -174,7 +210,6 @@ void insereLista(LS *lista, int conteudo){
         p->prox = NULL;
     }
 }
-
 void insereListaRA(LSRA *lista, int conteudo){
     if(lista == NULL)
         return;
@@ -197,7 +232,6 @@ void insereListaRA(LSRA *lista, int conteudo){
         lista->a++;
     }
 }
-
 void imprimeLista(LS *lista){
     if(lista == NULL)
         return;
@@ -215,7 +249,6 @@ void imprimeLista(LS *lista){
         printf("%d ", p->conteudo);
     }
 }
-
 int contaLista(LS *lista){
     if(lista == NULL)
         return -1;
@@ -231,7 +264,6 @@ int contaLista(LS *lista){
         return qt;
     }
 }
-
 int contaListaR(NO *item){
     if(item != NULL) {
         return contaListaR(item->prox) + 1;
@@ -239,7 +271,6 @@ int contaListaR(NO *item){
 
     return 0;
 }
-
 int qntMatchR(NO *no, int item){
 
     if(no != NULL) {
@@ -251,7 +282,6 @@ int qntMatchR(NO *no, int item){
 
     return 0;
 }
-
 int qntMatch(LS *lista, int item){
     if(lista == NULL)
         return -1;
@@ -272,7 +302,6 @@ int qntMatch(LS *lista, int item){
 
     return qt;
 }
-
 int qntMatchBig(LS *lista, int item){
     if(lista == NULL)
         return -1;
@@ -309,7 +338,6 @@ int qntMatchSmall(LS *lista, int item){
 
     return qt;
 }
-
 void *splitIPList(LS *lista){
     if(lista == NULL)
         return NULL;
@@ -341,7 +369,6 @@ void *splitIPList(LS *lista){
     listaip->l2 = par;
     return listaip;
 }
-
 void *splitBSList(LS *lista, int x){
     if(lista == NULL)
         return NULL;
@@ -372,7 +399,6 @@ void *splitBSList(LS *lista, int x){
     listaip->l2 = small;
     return listaip;
 }
-
 int replaceXY(LS *lista, int x, int y){
     if(lista == NULL)
         return -1;
@@ -395,7 +421,6 @@ int replaceXY(LS *lista, int x, int y){
     }
     return qt;
 }
-
 void removeX(LS *lista, int x){
     if(lista == NULL)
         return;
@@ -419,7 +444,6 @@ void removeX(LS *lista, int x){
         }
     }
 }
-
 void removeRA(LSRA *lista, int x){
     if(lista == NULL)
         return;
@@ -445,7 +469,6 @@ void removeRA(LSRA *lista, int x){
         }
     }
 }
-
 int returnPNO(LS *lista){
     if(lista != NULL) {
         if (lista->no != NULL)
@@ -456,7 +479,6 @@ int returnPNO(LS *lista){
     else
         printf("\nLista nula.");
 }
-
 int returnUNO(LS *lista){
     if(lista == NULL) {
         printf("Lista nula.");
@@ -475,5 +497,156 @@ int returnUNO(LS *lista){
 
     return p->conteudo;
 }
+void *returnLast(LS *lista){
+    if(lista != NULL){
+        if(lista->no != NULL){
+            NO *p = lista->no;
+            while(p-> prox != NULL)
+                p = p->prox;
+            return p;
+        }
+        else{
+            printf("Lista vazia.");
+            return NULL;
+        }
+    }
+    else {
+        printf("Lista nula.");
+        return NULL;
+    }
+}
+void insertN(LS *lista, int pos, int conteudo){
+    if(pos < 0){
+        printf("Posição inválida.");
+        return;
+    }
+    if(lista == NULL){
+        printf("Lista nula.");
+        return;
+    }
+
+    int aux = 0;
+    NO *p = lista->no;
+    NO *a = NULL;
+
+    if(p == NULL && pos != 0){
+        printf("Posição inválida!");
+        return;
+    }
+
+    while(p->prox != NULL){
+        if(aux == pos)
+            break;
+        else {
+            aux++;
+            a = p;
+            p = p->prox;
+        }
+    }
+
+    a->prox = malloc(sizeof(NO));
+    a = a->prox;
+    a->conteudo = conteudo;
+    a->prox = p;
+}
+void insertN1(LS *lista, int pos, int conteudo){
+    if(pos < 0){
+        printf("Posição inválida.");
+        return;
+    }
+    if(lista == NULL){
+        printf("Lista nula.");
+        return;
+    }
+
+    int aux = 0;
+    NO *p = lista->no;
+    NO *a = NULL;
+
+    if(lista->no == NULL && pos != 0){
+        printf("Posição inválida.");
+        return;
+    }
+
+    if(lista->no == NULL && pos == 0){
+        lista->no = malloc(sizeof(NO));
+        lista->no->conteudo = conteudo;
+        lista->no->prox = NULL;
+    }
+
+    if(pos == 0 && lista->no != NULL){
+        NO *aa = malloc(sizeof(NO));
+        aa->conteudo = conteudo;
+        a = lista->no;
+        aa->prox = a;
+        lista->no = aa;
+        return;
+    }
+
+    while(p->prox != NULL){
+        if(aux == (pos - 1)){
+            break;
+        }else{
+            a = p;
+            p = p->prox;
+            aux++;
+        }
+    }
+
+    NO *aa = malloc(sizeof(NO));
+    aa->conteudo = conteudo;
+    a->prox = aa;
+    aa->prox = p;
+}
+void removeN(LS *lista, int pos){
+    /*if(lista == NULL){
+        printf("Lista nula.");
+        return;
+    }
+
+    if(lista->no == NULL){
+        printf("Lista vazia.");
+        return;
+    }
+
+    NO *p = lista->no;
+    NO *a = NULL;
+    int aux = 0;
+
+    if(pos == 0){
+        a = lista->no->prox;
+        free(lista->no);
+        lista->no = a;
+        return;
+    }
+    p = lista->no;
+    a = NULL;
+    while(p->prox != NULL){
+        a = p;
+        p = p->prox;
+
+        if(pos == (aux + 1))
+            break;
+        else{
+            aux++;
+        }
+    }
+
+    if(p->prox == NULL && aux == (pos - 1)){
+        a->prox = NULL;
+        free(p);
+        return;
+    }
+
+    if(p->prox == NULL && aux <= pos){
+        printf("Posição inválida.");
+        return;
+    }
+
+    a->prox = p->prox;
+    free(p);*/
+    printf("Não implementei o ex 16 pq sou burrão.\n");
+}
+
 
 
