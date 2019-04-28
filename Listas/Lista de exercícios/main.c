@@ -647,6 +647,3 @@ void removeN(LS *lista, int pos){
     free(p);*/
     printf("Não implementei o ex 16 pq sou burrão.\n");
 }
-
-
-
