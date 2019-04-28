@@ -24,9 +24,17 @@ typedef struct{
     NOH *V[MAX];
 }LSH;
 
+
+//Hashing sem overflow
 void imprimeHashingTable(LSH *tab);
 void insertHSC(LSH *tab, char *content, int ind);
 void inicializarHT(LSH *tab);
+
+//Hashing com overflow
+void startHTS(LSHO *tab);
+void insertHCO(LSHO *tab, char *content, int ind);
+void printHashingWOver(LSHO *tab);
+
 int hash(char *info, int tam);
 
 void main(){
@@ -42,7 +50,21 @@ void main(){
     insertHSC(listahash, "PORRE", hash("PORRE", MAX));
     imprimeHashingTable(listahash);
 
+    //Hashing básico com overflow
     printf("=====HASHING CO=====\n");
+    LSHO *listahover = malloc(sizeof(LSHO));
+    startHTS(listahover);
+    insertHCO(listahover, "OPA!", hash("OPA!", MAX));
+    insertHCO(listahover, "ED", hash("ED", MAX));
+    insertHCO(listahover, "APA!", hash("APA!", MAX));
+    insertHCO(listahover, "EPA!", hash("EPA!", MAX));
+    insertHCO(listahover, "UPA!", hash("UPA!", MAX));
+    insertHCO(listahover, "IPA!", hash("IPA!", MAX));
+    insertHCO(listahover, "RPA!", hash("RPA!", MAX));
+    insertHCO(listahover, "QPA!", hash("QPA!", MAX));
+    insertHCO(listahover, "GPA!", hash("GPA!", MAX));
+    insertHCO(listahover, "VSF RONALDO!!", hash("VSF RONALDO!!", MAX));
+    printHashingWOver(listahover);
 }
 
 /*========================
@@ -96,20 +118,23 @@ void insertHCO(LSHO *tab, char *content, int ind){
     }
 
     int i = 0;
-    while(i < MAX){
+    while(i < OVER){
         if(tab->O[i].content == NULL)
             break;
         i++;
     }
 
-    if(i >= MAX){
-        printf("Overflow cheio.");
+    if(i >= OVER){
+        printf("Overflow cheio.\nItem: '%s' não foi gravado.\n\n", content);
         return;
     }
 
-    tab->P[ind].prox = i;
-    tab->O[ind].content = content;
-    tab->O[ind].prox = -1;
+    if(i == 0)
+        tab->P[ind].prox = i;
+    else
+        tab->O[i-1].prox = i;
+    tab->O[i].content = content;
+    tab->O[i].prox = -1;
 
 }
 void insertHSC(LSH *tab, char *content, int ind){
@@ -137,24 +162,6 @@ void insertHSC(LSH *tab, char *content, int ind){
     n->content = content;
     n->prox = NULL;
 }
-
-void insertHCC(LSH *tab, char *content, int ind){
-    if(tab == NULL)
-    {
-        printf("Tabela nula.");
-        return;
-    }
-
-    if(tab->V[ind] == NULL)
-    {
-        NOH n = malloc(sizeof(NOH));
-        n->content = content;
-        n->prox = NULL;
-        tab->V[ind] = n;
-        return;
-    }
-}
-
 void imprimeHashingTable(LSH *tab){
     if(tab == NULL){
         printf("Tabela nula.");
@@ -175,9 +182,27 @@ void imprimeHashingTable(LSH *tab){
     }
 }
 
-void printHashingWOver(LSH *tab){
+void printHashingWOver(LSHO *tab){
     if(tab == NULL){
         printf("Tabela nula.");
         return;
+    }
+
+    for(int i = 0; i < MAX; i++){
+        if(tab->P[i].content != NULL){
+            printf("Indice %d: ", i);
+            printf("%s", tab->P[i].content);
+
+            if(tab->P[i].prox != -1){
+                printf("\nOverflow: ");
+                int ind = tab->P[i].prox;
+                while(ind != -1){
+                    printf("%s ", tab->O[ind].content);
+                    ind = tab->O[ind].prox;
+                }
+            }
+
+            printf("\n\n");
+        }
     }
 }
