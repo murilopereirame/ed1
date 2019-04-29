@@ -22,3 +22,5 @@ elemento.
 - Escreva um programa que permita contar o número de vezes que houve inserção e remoção de
 elementos em uma lista.
 - Escreva uma rotina que retorne o conteúdo do primeiro nó de uma lista.
+- Hashing simples sem overflow.
+- Hashing simples com overflow.
