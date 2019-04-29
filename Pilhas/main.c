@@ -10,10 +10,11 @@ typedef struct{
     Elem *top;
 } Pilha;
 
-void imprimePilha(Pilha *p);
+void iniciaPilha(Pilha *p);
 void pop(Pilha *p);
 void push(Pilha *p, int con);
-void iniciaPilha(Pilha *p);
+void imprimePilha(Pilha *p);
+int busca(Pilha *p, int conteudo);
 
 void main(){
     Pilha *p = malloc(sizeof(Pilha));
@@ -37,6 +38,14 @@ void main(){
     pop(p);
     pop(p);
     imprimePilha(p);
+
+    printf("\n\n");
+
+    printf("===Busca pelo elemento 0===\n");
+    if(busca(p, 0))
+        printf("O elemento %d pertence a pilha.\n", 0);
+    else
+        printf("O elemento %d não pertence a pilha.\n", 0);
 }
 
 void iniciaPilha(Pilha *p){
@@ -89,4 +98,26 @@ void imprimePilha(Pilha *p){
         e= e->prox;
     }
     printf("%d\n", e->con);
+}
+int busca(Pilha *p, int conteudo){
+    if(p==NULL){
+        printf("Pilha nula.\n");
+        return -1;
+    }
+
+    if(p->top == NULL){
+        return 0;
+    }
+
+    Elem *e = p->top;
+    while(e->prox != NULL){
+        if(e->con == conteudo)
+            return 1;
+        e = e->prox;
+    }
+
+    if(e->con == conteudo)
+        return 1;
+    else
+        return 0;
 }
