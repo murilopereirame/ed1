@@ -13,6 +13,7 @@ typedef struct{
 typedef struct{
     int prox;
     char *content;
+    int ind;
 }NOS;
 
 typedef struct{
@@ -387,5 +388,20 @@ int searchHashO(LSHO *tab, int ind, const char *content){
             prox = tab->O[prox].prox;
         }
     }
+
+}
+//Hashing com overflow em arquivo
+void startFile(FILE *arq){
+    if(arq == NULL){
+        arq = fopen("data.dat", "wb+");
+        if(!arq)
+            printf("Erro ao abrir arquivos.");
+    }
+}
+void insertHFile(LSHO *tab, char *content, FILE *arq){
+    NOS n = {-1, *content};
+    fwrite(&n, sizeof(NOS), 1, arq);
+}
+void removeHFile(LSHO *tab, char *content, FILE *arq){
 
 }
