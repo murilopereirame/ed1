@@ -30,17 +30,21 @@ int main(){
     raiz->pai = NULL;
     raiz->esq = NULL;
     raiz->dir = NULL;
-    raiz->data = 27;
+    raiz->data = -2;
 
-    insereElem(49, raiz);
-    insereElem(15, raiz);
-    insereElem(10, raiz);
-    insereElem(8, raiz);
+    insereElem(-9, raiz);
+    insereElem(4, raiz);
+    insereElem(6, raiz);
+    insereElem(-4, raiz);
+    insereElem(-13, raiz);
+    insereElem(-411, raiz);
+    insereElem(-7, raiz);
+    insereElem(-3, raiz);
 
     imprimeArvore(raiz);
 
     printf("\n\n");
-    deletaFilho(27, raiz);
+    deletaFilho(-4, raiz);
     balancearArvore(raiz);
     imprimeArvore(raiz);
 }
@@ -258,6 +262,9 @@ void deletaFilho(int content, NO *raiz){
         deletaFilho(content, raiz->esq);
     else if(content > raiz->data)
         deletaFilho(content, raiz->dir);
+
+    balancearArvore(raiz);
+    defineBalanceamento(raiz);
 }
 
 NO *moreRightOfLeft(NO *raiz){
