@@ -9,16 +9,20 @@ typedef struct{
     int fatB;
 } NO;
 
+NO *noProblema(NO *raiz);
+NO *buscaItem(int content, NO *raiz);
+NO *criaNo(int content, NO *pai);
+
 int altura(NO* t);
+int estaBalanceada(NO *raiz);
+
 void imprimeArvore(NO *raiz);
 void rotacionaDireita(NO *pai);
 void rotacionaEsq(NO *pai);
-NO *noProblema(NO *raiz);
 void defineBalanceamento(NO *raiz);
 void insereElem(int content, NO *raiz);
 void balancearArvore(NO *raiz);
-int estaBalanceada(NO *raiz);
-NO *criaNo(int content, NO *pai);
+
 int main(){
     NO *raiz = malloc(sizeof(NO));
     raiz->pai = NULL;
@@ -32,6 +36,13 @@ int main(){
     insereElem(8, raiz);
 
     imprimeArvore(raiz);
+
+    printf("\n\n");
+    NO *teste = buscaItem(15, raiz);
+
+    if(teste == NULL)
+        printf("j");
+    printf("%d", teste->data);
 }
 
 void insereElem(int content, NO *raiz){
@@ -187,6 +198,30 @@ void imprimeArvore(NO *raiz){
         imprimeArvore(raiz->esq);
         printf("%d", raiz->data);
         imprimeArvore(raiz->dir);
+    }
+}
+
+NO *buscaItem(int content, NO *raiz){
+    NO *aux = NULL;
+    if(content > raiz->data){
+        if(raiz->dir != NULL)
+            aux = buscaItem(content, raiz->dir);
+        else
+            aux = NULL;
+
+        return aux;
+    }
+    else if(content < raiz->data){
+        if(raiz->esq != NULL)
+            aux = buscaItem(content, raiz->esq);
+        else
+            aux = NULL;
+        return aux;
+    }
+    else {
+        if(raiz->data == content)
+            aux = raiz;
+        return aux;
     }
 }
 
