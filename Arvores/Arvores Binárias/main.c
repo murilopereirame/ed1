@@ -41,7 +41,8 @@ int main(){
     //Busca
     //printf("%d", buscaElem(-2, raiz));
 
-    //deletaFilho(0, raiz);
+    deletaFilho(0, raiz);
+    imprimeArvore(raiz);
 }
 
 void deletaFilho(int content, NO *raiz){

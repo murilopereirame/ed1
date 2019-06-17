@@ -12,10 +12,12 @@ typedef struct{
 NO *noProblema(NO *raiz);
 NO *buscaItem(int content, NO *raiz);
 NO *criaNo(int content, NO *pai);
+NO *moreRightOfLeft(NO *raiz);
 
 int altura(NO* t);
 int estaBalanceada(NO *raiz);
 
+void deletaFilho(int content, NO *raiz);
 void imprimeArvore(NO *raiz);
 void rotacionaDireita(NO *pai);
 void rotacionaEsq(NO *pai);
@@ -38,11 +40,9 @@ int main(){
     imprimeArvore(raiz);
 
     printf("\n\n");
-    NO *teste = buscaItem(15, raiz);
-
-    if(teste == NULL)
-        printf("j");
-    printf("%d", teste->data);
+    deletaFilho(27, raiz);
+    balancearArvore(raiz);
+    imprimeArvore(raiz);
 }
 
 void insereElem(int content, NO *raiz){
@@ -239,5 +239,39 @@ int altura(NO* t)
             return altD+1;
         else
             return altE+1;
+    }
+}
+
+void deletaFilho(int content, NO *raiz){
+    if(content == raiz->data){
+        NO *temp = moreRightOfLeft(raiz);
+        NO *tempPai = temp->pai;
+
+        if(tempPai->data < temp->data)
+            tempPai->dir = NULL;
+        else
+            tempPai->esq = NULL;
+
+        raiz->data = temp->data;
+        raiz->pai = temp->pai;
+    } else if(content < raiz->data)
+        deletaFilho(content, raiz->esq);
+    else if(content > raiz->data)
+        deletaFilho(content, raiz->dir);
+}
+
+NO *moreRightOfLeft(NO *raiz){
+    if(raiz->dir == NULL){
+        NO *temp = raiz->esq;
+        while(temp->dir != NULL) {
+            temp = temp->dir;
+        }
+        return temp;
+    }else{
+        NO *temp = raiz->dir;
+        while(temp->esq != NULL) {
+            temp = temp->esq;
+        }
+        return temp;
     }
 }
