@@ -12,43 +12,112 @@ typedef struct{
 int altura(NO* t);
 void imprimeArvore(NO *raiz);
 void rotacionaDireita(NO *pai);
+void rotacionaEsq(NO *pai);
+NO *noProblema(NO *raiz);
 void defineBalanceamento(NO *raiz);
+void insereElem(int content, NO *raiz);
+void balancearArvore(NO *raiz);
+int estaBalanceada(NO *raiz);
+NO *criaNo(int content, NO *pai);
 int main(){
     NO *raiz = malloc(sizeof(NO));
     raiz->pai = NULL;
+    raiz->esq = NULL;
+    raiz->dir = NULL;
     raiz->data = 27;
 
-    NO *d1 = malloc(sizeof(NO));
-    d1->pai = raiz;
-    d1->data = 49;
-    d1->esq = NULL;
-    d1->dir = NULL;
+    insereElem(49, raiz);
+    insereElem(15, raiz);
+    insereElem(10, raiz);
+    insereElem(8, raiz);
 
-    NO *e1 = malloc(sizeof(NO));
-    e1->data = 15;
-    e1->dir = NULL;
-    e1->esq = NULL;
-
-    NO *e2 = malloc(sizeof(NO));
-    e2->data = 10;
-    e2->dir = NULL;
-    e2->esq = NULL;
-
-    NO *e3 = malloc(sizeof(NO));
-    e3->data = 8;
-    e3->dir = NULL;
-    e3->esq = NULL;
-
-    raiz->dir = d1;
-    raiz->esq = e1;
-    e1->esq = e2;
-    e2->esq = e3;
-
-    rotacionaDireita(e1);
     imprimeArvore(raiz);
-    defineBalanceamento(raiz);
+}
 
-    printf("\n\n\n%d", d1->fatB);
+void insereElem(int content, NO *raiz){
+    while(!estaBalanceada(raiz)){
+        balancearArvore(raiz);
+    }
+
+    if(raiz->esq == NULL && content < raiz->data){
+        raiz->esq = criaNo(content, raiz);
+        return;
+    }
+    else if(raiz->dir == NULL && content > raiz->data){
+        raiz->dir = criaNo(content, raiz);
+        return;
+    }
+    else if(raiz->data != content){
+        if(content > raiz->data){
+            insereElem(content, raiz->dir);
+            return;
+        }
+        else{
+            insereElem(content, raiz->esq);
+            return;
+        }
+    }
+
+    balancearArvore(raiz);
+    defineBalanceamento(raiz);
+}
+
+NO *criaNo(int content, NO *pai){
+    NO *elem = malloc(sizeof(NO));
+    elem->data = content;
+    elem->esq = NULL;
+    elem->dir = NULL;
+    elem->pai = pai;
+    return elem;
+}
+
+int estaBalanceada(NO *raiz) {
+    if(raiz->fatB == 0)
+        return 1;
+    else
+        return 0;
+}
+
+void balancearArvore(NO *raiz){
+    if(raiz->fatB > 1 || raiz->fatB < -1) {
+        if(raiz->fatB > 1)
+            rotacionaEsq(noProblema(raiz));
+        else if(raiz->fatB < -1)
+            rotacionaDireita(noProblema(raiz));
+    }
+    else
+        return;
+}
+
+NO *noProblema(NO *raiz){
+    if(raiz->fatB > 1){
+        NO *aux = raiz->esq;
+        while (aux != NULL){
+            if(aux->fatB > 1)
+                aux = aux->esq;
+            else if(aux->fatB < -1)
+                aux = aux->dir;
+            else
+                break;
+        }
+
+        return aux->pai;
+    }
+    else if(raiz->fatB < -1){
+        NO *aux = raiz->dir;
+        while (aux != NULL){
+            if(aux->fatB < -1)
+                aux = aux->dir;
+            else if(aux->fatB > 1)
+                aux = aux->esq;
+            else
+                break;
+        }
+
+        return aux->pai;
+    }
+    else
+        return NULL;
 }
 
 void defineBalanceamento(NO *raiz){
