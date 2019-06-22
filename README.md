@@ -26,3 +26,4 @@ elementos em uma lista.
 - Hashing simples com overflow.
 - Matrizes esparsas (Leitura e gravação).
 - Pilhas.
+- Inserção, remoção, balanceamento em árvore binária.
