@@ -1,134 +1,82 @@
-#include <stdlib.h>
-#include <stdio.h>
+#include<stdio.h>
+#include<stdlib.h>
 
-typedef struct{
-    int data;
-    struct NO *esq;
-    struct NO *dir;
-} NO;
 
-typedef struct{
-    NO *raiz;
-} Tree;
+struct no{
+    int val;
+    struct no *esq;
+    struct no *dir;
+}no;
+typedef struct no No;
 
-NO *criaNo(int content);
-void insereFilho(int content, NO *raiz);
-void imprimeArvore(NO *raiz);
-int buscaElem(int content, NO *raiz);
-NO *moreRightOfLeft(NO *raiz);
-void deletaFilho(int content, NO *raiz);
-
-int main(){
-    NO *raiz = malloc(sizeof(NO));
-    raiz->data = 0;
-    raiz->esq = NULL;
-    raiz->dir = NULL;
-
-    //Inserção
-    insereFilho(2, raiz);
-    insereFilho(-2, raiz);
-    insereFilho(5, raiz);
-    insereFilho(7, raiz);
-    insereFilho(3, raiz);
-    insereFilho(-1, raiz);
-    insereFilho(-3, raiz);
-
-    //Impressão em ordem
-    imprimeArvore(raiz);
-
-    printf("\n\n\n");
-
-    //Busca
-    //printf("%d", buscaElem(-2, raiz));
-
-    deletaFilho(0, raiz);
-    imprimeArvore(raiz);
+No *MoreRLoMoreLR(No *raiz){
+    No *atual= raiz;
+    while(atual && atual->esq != NULL)
+        atual=atual->esq;
+    return atual;
 }
-
-void deletaFilho(int content, NO *raiz){
-    if(content == raiz->data){
-        NO *temp = moreRightOfLeft(raiz);
-        raiz->data = temp->data;
-    } else if(content < raiz->data)
-        deletaFilho(content, raiz->esq);
-    else if(content > raiz->data)
-        deletaFilho(content, raiz->dir);
-}
-
-NO *moreRightOfLeft(NO *raiz){
-    if(raiz->dir == NULL){
-        NO *temp = raiz->esq;
-        while(temp->dir != NULL) {
-            temp = temp->dir;
-        }
-        return temp;
-    }else{
-        NO *temp = raiz->dir;
-        while(temp->esq != NULL) {
-            temp = temp->esq;
-        }
-        return temp;
-    }
-}
-
-void imprimeArvore(NO *raiz){
-    if(raiz->dir == NULL && raiz->esq == NULL){
-        printf("%d", raiz->data);
-    }
-    else if(raiz->dir == NULL) {
-        imprimeArvore(raiz->esq);
-        printf("%d", raiz->data);
-    }
-    else if(raiz->esq == NULL){
-        imprimeArvore(raiz->dir);
-        printf("%d", raiz->data);
+No *removeNo(No *raiz, int item){
+    if(item < raiz->val){
+        raiz->esq = removeNo(raiz->esq, item);
+    }else if (item > raiz->val){
+        raiz->dir = removeNo(raiz->dir, item);
     }
     else{
-        imprimeArvore(raiz->esq);
-        printf("%d", raiz->data);
-        imprimeArvore(raiz->dir);
-    }
-}
-
-int buscaElem(int content, NO *raiz){
-    if(content < raiz->data && raiz->esq != NULL)
-        buscaElem(content, raiz->esq);
-    else if(content > raiz->data && raiz->dir != NULL)
-        buscaElem(content, raiz->dir);
-    else if(raiz->dir != NULL && raiz->esq != NULL)
-        return 0;
-    else
-        if(content == raiz->data)
-            return 1;
-        else
-            return 0;
-}
-
-void insereFilho(int content, NO *raiz){
-    if(raiz->esq == NULL && content < raiz->data){
-        raiz->esq = criaNo(content);
-        return;
-    }
-    else if(raiz->dir == NULL && content > raiz->data){
-        raiz->dir = criaNo(content);
-        return;
-    }
-    else if(raiz->data != content){
-        if(content > raiz->data){
-            insereFilho(content, raiz->dir);
-            return;
+        if(raiz->esq == NULL){
+            No *temp = raiz->dir;
+            free(raiz);
+            return temp;
+        }else if (raiz->dir == NULL){
+            No *temp = raiz->esq;
+            free(raiz);
+            return temp;
         }
-        else{
-            insereFilho(content, raiz->esq);
-            return;
-        }
+        No *temp = MoreRLoMoreLR(raiz->dir);
+        raiz->val = temp->val;
+        raiz->dir = removeNo(raiz->dir, temp->val);
+    }
+    return raiz;
+
+}
+
+No *novoNo(int item){
+    No *novoNo = (No*)malloc(sizeof(No));
+    novoNo->val = item;
+    novoNo->esq = NULL;
+    novoNo->dir = NULL;
+    return novoNo;
+}
+
+No *insereNo(No *No, int item){
+    if(No == NULL) return novoNo(item);
+    if(No->val < item){
+        No->dir = insereNo(No->dir, item);
+    }else if (No->val > item){
+        No->esq = insereNo(No->esq, item);
+    }
+    return No;
+
+}
+
+void PosO(No * raiz){
+    if(raiz != NULL){
+        printf("%d\n", raiz->val);
+        PosO(raiz->esq);
+        PosO(raiz->dir);
     }
 }
 
-NO *criaNo(int content){
-    NO *elem = malloc(sizeof(NO));
-    elem->data = content;
-    elem->esq = NULL;
-    elem->dir = NULL;
-    return elem;
+int main(){
+    struct no *raiz = NULL;
+    raiz = insereNo(raiz, 10);
+    raiz =insereNo(raiz, 20);
+    raiz =insereNo(raiz, 30);
+    raiz =insereNo(raiz, 40);
+    raiz = insereNo(raiz, 50);
+    raiz =insereNo(raiz, 60);
+    PosO(raiz);
+    raiz = removeNo(raiz, 100);
+    PosO(raiz);
+
+    return 0;
 }
