@@ -1,0 +1,103 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+typedef struct no No;
+struct no{
+    int val;
+    struct no *esq;
+    struct no *dir;
+}no;
+
+
+
+No *MoreRLoMoreLR(No *raiz){
+    No *atual= raiz;
+    if(atual != NULL)
+        MoreRLoMoreLR(atual->esq);
+    return atual;
+}
+No *removeNo(No *raiz, int item){
+    if(item < raiz->val){
+        raiz->esq = removeNo(raiz->esq, item);
+    }else if (item > raiz->val){
+        raiz->dir = removeNo(raiz->dir, item);
+    }
+    else{
+        if(raiz->esq == NULL){
+            No *temp = raiz->dir;
+            free(raiz);
+            return temp;
+        }else if (raiz->dir == NULL){
+            No *temp = raiz->esq;
+            free(raiz);
+            return temp;
+        }
+        No *temp = MoreRLoMoreLR(raiz->dir);
+        raiz->val = temp->val;
+        raiz->dir = removeNo(raiz->dir, temp->val);
+    }
+    return raiz;
+
+}
+
+No *novoNo(int item){
+    No *novoNo = (No*)malloc(sizeof(No));
+    novoNo->val = item;
+    novoNo->esq = NULL;
+    novoNo->dir = NULL;
+    return novoNo;
+}
+
+No *insereNo(No *No, int item){
+    if(No == NULL) return novoNo(item);
+    if(No->val < item){
+        No->dir = insereNo(No->dir, item);
+    }else if (No->val > item){
+        No->esq = insereNo(No->esq, item);
+    }
+    return No;
+
+}
+
+void PreO(No * raiz){
+    if(raiz != NULL){
+        printf("%d\n", raiz->val);
+        PreO(raiz->esq);
+        PreO(raiz->dir);
+    }
+}
+
+int alturaA(No *raiz){
+    if (raiz != NULL){
+        int altE = alturaA(raiz->esq);
+        int altD = alturaA(raiz->dir);
+        if (altE>altD) return altE+1;
+        else return altD+1;
+    }
+
+}
+int calculaFB(No *No){
+    if(No!=NULL){
+        int fb = alturaA(No->esq) - alturaA(No->dir);
+        calculaFB(No->esq);
+        calculaFB(No->dir);
+        return fb;
+    }
+
+}
+int main(){
+    struct no *raiz = NULL;
+    raiz = insereNo(raiz, 40);
+    raiz =insereNo(raiz, 20);
+    raiz =insereNo(raiz, 50);
+    raiz =insereNo(raiz, 30);
+    raiz = insereNo(raiz, 60);
+    raiz =insereNo(raiz, 15);
+    raiz =insereNo(raiz, 10);
+    PreO(raiz);
+    PreO(raiz);
+    printf("%d\n", alturaA(raiz->dir));
+    printf("%d", calculaFB(raiz->dir));
+    return 0;
+}
+
