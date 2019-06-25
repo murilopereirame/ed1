@@ -47,14 +47,6 @@ int altura(No *No){
             return altE+1;
     }
 }
-int calculaFB(No *No){
-    if(No!=NULL){
-        int fb = altura(No->esq) - altura(No->dir);
-        calculaFB(No->esq);
-        calculaFB(No->dir);
-        return fb;
-    }
-}
 No *insereNo(No *No, int val){
     if(No==NULL)return novoNo(val);
     if (No->val > val) {
@@ -64,18 +56,18 @@ No *insereNo(No *No, int val){
     else{
         return No;
     }
-    int fb = calculaFB(No);
-    if(fb > 1 && val < No->esq->val){
+    int fb = altura(No->esq) - altura(No->dir);
+    if(fb > 1){
         return rotacaoD(No);
     }
-    if (fb < -1 && val > No->dir->val){
+    if (fb < -1){
         return rotacaoE(No);
     }
-    if (fb > 1 && val > No->esq->val){
+    if (fb > 1){
         No->esq = rotacaoE(No->esq);
         return rotacaoD(No);
     }
-    if (fb < -1 && val < No->dir->val){
+    if (fb < -1){
         No->dir = rotacaoD(No->dir);
         return rotacaoE(No);
     }
@@ -110,18 +102,18 @@ No *deletaNo(No *No, int val){
         }
     }
     if (No == NULL) return No;
-    int fb = calculaFB(No);
-    if(fb > 1 && calculaFB(No)>=0){
+    int fb = altura(No->esq) - altura(No->dir);
+    if(fb > 1){
         return rotacaoD(No);
     }
-    if (fb < -1 && calculaFB(No)<=0){
+    if (fb < -1){
         return rotacaoE(No);
     }
-    if (fb > 1 && calculaFB(No)<0){
+    if (fb > 1){
         No->esq = rotacaoE(No->esq);
         return rotacaoD(No);
     }
-    if (fb < -1 && calculaFB(No)>0){
+    if (fb < -1){
         No->dir = rotacaoD(No->dir);
         return rotacaoE(No);
     }
@@ -145,8 +137,14 @@ int main(){
     raiz = insereNo(raiz, 60);
     raiz = insereNo(raiz, 70);
     raiz = insereNo(raiz, 90);
-    raiz = deletaNo(raiz, 20);
-    printf("%d\n", calculaFB(raiz));
+    raiz = insereNo(raiz, 15);
+    raiz = insereNo(raiz, 100);
+    raiz = insereNo(raiz, 120);
+    preO(raiz);
+    raiz = deletaNo(raiz,30);
+    raiz = deletaNo(raiz, 50);
+    raiz = deletaNo(raiz, 120);
+
     preO(raiz);
     return 0;
 }
