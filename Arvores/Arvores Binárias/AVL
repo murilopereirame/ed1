@@ -1,0 +1,152 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+
+struct no{
+    int val;
+    struct no *esq;
+    struct no *dir;
+}no;
+typedef struct no No;
+
+
+No *rotacaoD(No *p){
+    No *q, *temp;
+    q = p->esq;
+    temp = q->dir;
+    q->dir = p;
+    p->esq = temp;
+    return q;
+}
+
+No *rotacaoE(No *q){
+    No *p, *temp;
+    p = q->dir;
+    temp = p->esq;
+    p->esq = q;
+    q->dir =temp;
+    return p;
+}
+
+No *novoNo(int val){
+    No *novoNo = (No*)malloc(sizeof(No));
+    novoNo->val=val;
+    novoNo->esq=NULL;
+    novoNo->dir=NULL;
+    return novoNo;
+}
+
+int altura(No *No){
+    if (No == NULL) return -1;
+    else{
+        int altE = altura(No->esq);
+        int altD = altura(No->dir);
+        if (altE<altD)
+            return altD+1;
+        else
+            return altE+1;
+    }
+}
+int calculaFB(No *No){
+    if(No!=NULL){
+        int fb = altura(No->esq) - altura(No->dir);
+        calculaFB(No->esq);
+        calculaFB(No->dir);
+        return fb;
+    }
+}
+No *insereNo(No *No, int val){
+    if(No==NULL)return novoNo(val);
+    if (No->val > val) {
+        No->esq = insereNo(No->esq, val);
+    }else if (No->val < val)
+        No->dir = insereNo(No->dir, val);
+    else{
+        return No;
+    }
+    int fb = calculaFB(No);
+    if(fb > 1 && val < No->esq->val){
+        return rotacaoD(No);
+    }
+    if (fb < -1 && val > No->dir->val){
+        return rotacaoE(No);
+    }
+    if (fb > 1 && val > No->esq->val){
+        No->esq = rotacaoE(No->esq);
+        return rotacaoD(No);
+    }
+    if (fb < -1 && val < No->dir->val){
+        No->dir = rotacaoD(No->dir);
+        return rotacaoE(No);
+    }
+    return No;
+}
+No *menorVal(No *No){
+    struct no *atual= No;
+    if(atual != NULL)
+        menorVal(atual->esq);
+    return atual;
+}
+No *deletaNo(No *No, int val){
+    if (No == NULL) return No;
+    if(val < No->val)
+        No->esq= deletaNo(No->esq, val);
+    else if(val > No->val)
+        No->dir= deletaNo(No->dir, val);
+    else{
+        if(No->esq == NULL || No->dir == NULL){
+            struct no *temp = No->esq ? No->esq : No->dir;
+            if(temp == NULL){
+                temp = No;
+                No = NULL;
+            }else{
+                No = temp;
+                free(temp);
+            }
+        }else{
+            struct no *temp = menorVal(No->dir);
+            No->val = temp->val;
+            No->dir = deletaNo(No->dir, No->val);
+        }
+    }
+    if (No == NULL) return No;
+    int fb = calculaFB(No);
+    if(fb > 1 && calculaFB(No)>=0){
+        return rotacaoD(No);
+    }
+    if (fb < -1 && calculaFB(No)<=0){
+        return rotacaoE(No);
+    }
+    if (fb > 1 && calculaFB(No)<0){
+        No->esq = rotacaoE(No->esq);
+        return rotacaoD(No);
+    }
+    if (fb < -1 && calculaFB(No)>0){
+        No->dir = rotacaoD(No->dir);
+        return rotacaoE(No);
+    }
+    return No;
+}
+
+void preO(No *raiz){
+    if (raiz !=NULL){
+        printf("%d\n", raiz->val);
+        preO(raiz->esq);
+        preO(raiz->dir);
+    }
+}
+
+int main(){
+    No *raiz = NULL;
+    raiz = insereNo(raiz, 40);
+    raiz = insereNo(raiz, 30);
+    raiz = insereNo(raiz, 50);
+    raiz = insereNo(raiz, 20);
+    raiz = insereNo(raiz, 60);
+    raiz = insereNo(raiz, 70);
+    raiz = insereNo(raiz, 90);
+    raiz = deletaNo(raiz, 20);
+    printf("%d\n", calculaFB(raiz));
+    preO(raiz);
+    return 0;
+}
