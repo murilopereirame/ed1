@@ -27,3 +27,4 @@ elementos em uma lista.
 - Matrizes esparsas (Leitura e gravação).
 - Pilhas.
 - Inserção, remoção, balanceamento em árvore binária.
+- Modificação Hacktoberfest 01
