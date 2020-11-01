@@ -28,3 +28,4 @@ elementos em uma lista.
 - Pilhas.
 - Inserção, remoção, balanceamento em árvore binária.
 - Modificação Hacktoberfest 01
+- Modificação Hacktoberfest 02
